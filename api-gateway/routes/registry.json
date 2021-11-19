@@ -1,0 +1,22 @@
+{
+    "services":{
+        "auth":{
+            "apiName": "auth",
+            "host":"http://localhost",
+            "port":"8080",
+            "url":"http://authentication:3000/"
+        },
+        "books":{
+            "apiName": "books",
+            "host":"http://localhost",
+            "port":"8070",
+            "url":"http://books:3000/"
+        },
+        "search":{
+            "apiName": "search",
+            "host":"http://localhost",
+            "port":"8060",
+            "url":"http://search:3000/"
+        }
+    }
+}
