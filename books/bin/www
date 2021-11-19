@@ -7,6 +7,8 @@
 var app = require('../app');
 var debug = require('debug')('books:server');
 var http = require('http');
+const mongoose = require('mongoose');
+require('dotenv').config()
 
 /**
  * Get port from environment and store in Express.
@@ -88,3 +90,35 @@ function onListening() {
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
 }
+
+
+// Connect to MongoDB
+const DB_USER = process.env.MONGO_INITDB_ROOT_USERNAME;
+const PASSWORD = encodeURIComponent(process.env.MONGO_INITDB_ROOT_PASSWORD);
+const DB = process.env.MONGO_INITDB_DATABASE;
+
+
+const DB_URL = `mongodb://${DB_USER}:${PASSWORD}@books-mongo:27017/`;
+
+
+// Connect to MongoDB
+mongoose
+  .connect(
+    DB_URL,
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+    }
+  )
+  .then(() => console.log('books MongoDB Connected'))
+  .catch(err => console.log(err));
+
+// When the mongodb server goes down, mongoose emits a 'disconnected' event
+mongoose.connection.on('disconnected', () => { console.log('-> lost connection'); });
+// The driver tries to automatically reconnect by default, so when the
+// server starts the driver will reconnect and emit a 'reconnect' event.
+mongoose.connection.on('reconnect', () => { console.log('-> reconnected'); });
+
+// Mongoose will also emit a 'connected' event along with 'reconnect'. These
+// events are interchangeable.
+mongoose.connection.on('connected', () => { console.log('-> connected'); });
