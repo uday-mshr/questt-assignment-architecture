@@ -13,15 +13,29 @@ services:
     restart: always
     ports:
       - '8080:3000'
+    depends_on:
+      - auth-mongo
   books:
     container_name: books
     build: ./books
     restart: always
     ports:
       - '8070:3000'
-  # search:
-  #   container_name: search
-  #   build: ./Search
-  #   restart: always
-  #   ports:
-  #     - '8060:3000'
+    depends_on:
+      - books-mongo
+  auth-mongo:
+    container_name: auth-mongo
+    image: mongo:latest
+    restart: always
+    ports:
+      - '27017:27017'
+    volumes:
+      - ./auth-data/datadir/mongo/data:/data/db
+  books-mongo:
+    container_name: books-mongo
+    image: mongo:latest
+    restart: always
+    ports:
+      - '27018:27017'
+    volumes:
+      - ./books-data/datadir/mongo/data:/data/db
