@@ -15,13 +15,20 @@ exports.login = async (req, res) => {
 exports.signup = async (req, res) => {
 
     console.log("data ", req.body);
-    res.status(200).send('response from signup Method')
-    // const user = new User(req.body)
-    // try {
-    //     await user.save()
-    //     const token = await user.generateAuthToken()
-    //     res.send({ user, token })
-    // } catch (e) {
-    //     res.status(400).send()
-    // }
+    // res.status(200).send('response from signup Method')
+    const userName = req.body.userName;
+    const password = req.body.password;
+    try {
+        
+        var user = new User({
+            userName: userName,
+            password: password
+        });
+        // await user.save()
+        const token = await user.generateAuthToken()
+        res.send({user,token})
+    } catch (e) {
+        console.log("error", e)
+        res.status(400).send()
+    }
 }

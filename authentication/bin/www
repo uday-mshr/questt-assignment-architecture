@@ -97,7 +97,7 @@ const DB_USER = process.env.MONGO_INITDB_ROOT_USERNAME;
 const PASSWORD = encodeURIComponent(process.env.MONGO_INITDB_ROOT_PASSWORD);
 const DB = process.env.MONGO_INITDB_DATABASE;
 
-const DB_URL = `mongodb://${DB_USER}:${PASSWORD}@auth-mongo:27017/`;
+const DB_URL = `mongodb://${DB_USER}:${PASSWORD}@auth-mongo:27017/${DB}`;
 
 
 // Connect to MongoDB

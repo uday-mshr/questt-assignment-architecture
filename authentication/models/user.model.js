@@ -8,18 +8,18 @@ const Schema = mongoose.Schema
 
 const UserSchema = new Schema({
     userName: { type: String, required: true, unique: true},
-    password: { type: String, required: true, unique: true},
-    tokens: [{ token: { type: String, required: true } }]
+    password: { type: String, required: true},
+    tokens: [{ token: { type: String } }]
 });
 
-UserSchema.pre('save', async function (next) {
-    const user = this
+// UserSchema.pre('save', async function (next) {
+//     const user = this
 
-    if (user.isModified('password')) {
-        user.password = await bcrypt.hash(user.password, 128)
-    }
-    next()
-});
+//     if (user.isModified('password')) {
+//         user.password = await bcrypt.hash(user.password, 128)
+//     }
+//     next()
+// });
 
 
 UserSchema.statics.findByCredentials = async (userName, password) => {
@@ -39,13 +39,21 @@ UserSchema.statics.findByCredentials = async (userName, password) => {
 }
 
 UserSchema.methods.generateAuthToken = async function() {
-    const user = this
-    const token = jwt.sign({ _id: user._id.toString() }, 'maketoken')
+    
+    try{
+        console.log("generateAuthToken");
+        const user = this;
+        const token = jwt.sign({ _id: user._id.toString() }, 'maketoken');
 
-    user.tokens = user.tokens.concat({ token })
-    await user.save()
+        user.tokens = user.tokens.concat({ token });
+        await user.save();
 
-    return token
+        return token;
+
+    } catch (e) {
+        console.log("error", e)
+    }
+    
 }
 
 const User = mongoose.model('User', UserSchema)

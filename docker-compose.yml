@@ -1,4 +1,7 @@
 version: '3.8'
+networks:
+  questt-network:
+    driver: bridge
 
 services:
   api-gateway:
@@ -7,6 +10,8 @@ services:
     restart: always
     ports:
       - '80:3000'
+    networks: 
+      - questt-network
   authentication:
     container_name: authentication
     build: ./authentication
@@ -15,6 +20,8 @@ services:
       - '8080:3000'
     depends_on:
       - auth-mongo
+    networks: 
+      - questt-network
   books:
     container_name: books
     build: ./books
@@ -23,6 +30,8 @@ services:
       - '8070:3000'
     depends_on:
       - books-mongo
+    networks: 
+      - questt-network
   auth-mongo:
     container_name: auth-mongo
     image: mongo:latest
@@ -36,6 +45,8 @@ services:
     volumes:
       - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
       - ./auth-data/datadir/mongo/data:/data/db
+    networks: 
+      - questt-network
   books-mongo:
     container_name: books-mongo
     image: mongo:latest
@@ -49,3 +60,5 @@ services:
     volumes:
       - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
       - ./books-data/datadir/mongo/data:/data/db
+    networks: 
+      - questt-network
